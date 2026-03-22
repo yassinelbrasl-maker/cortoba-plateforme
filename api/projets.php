@@ -193,7 +193,8 @@ function update($id, array $user) {
 
 function remove($id, array $user) {
     if (!$id) jsonError('ID requis');
-    if (($user['role'] ?? '') !== 'admin') jsonError('Admin requis', 403);
+    $role = $user['role'] ?? '';
+    if ($role !== 'admin' && $role !== 'Architecte gérant') jsonError('Seul un Architecte gérant peut supprimer', 403);
     $db = getDB();
     $db->prepare('DELETE FROM CA_projets_missions WHERE projet_id = ?')->execute([$id]);
     $db->prepare('DELETE FROM CA_projets_intervenants WHERE projet_id = ?')->execute([$id]);

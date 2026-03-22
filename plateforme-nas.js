@@ -839,7 +839,7 @@ function renderClients() {
           '<td><span class="'+badgeClass(c.statut)+'">'+c.statut+'</span></td>'+
           '<td onclick="event.stopPropagation()" style="white-space:nowrap">'+
             '<button class="btn btn-sm" onclick="openEditClient(\''+c.id+'\')" style="color:var(--accent);margin-right:3px" title="Modifier">✎</button>'+
-            '<button class="btn btn-sm" onclick="deleteRow(\'client\',\''+c.id+'\')" style="color:#e07070" title="Supprimer">✕</button>'+
+            (canDelete() ? '<button class="btn btn-sm" onclick="deleteRow(\'client\',\''+c.id+'\')" style="color:#e07070" title="Supprimer">✕</button>' : '')+
           '</td>'+
         '</tr>';
       }).join('');
@@ -1001,7 +1001,12 @@ function openEditClient(id) {
 // ══════════════════════════════════════════════════════════
 //  OTHER CRUD
 // ══════════════════════════════════════════════════════════
+function canDelete(){
+  var s = getSession();
+  return s && (s.isAdmin || s.role === 'Architecte gérant');
+}
 function deleteRow(type, id){
+  if (!canDelete()) { alert('Seul un Architecte gérant peut supprimer.'); return; }
   if (!confirm('Supprimer cet élément ?')) return;
   var path = '';
   if (type==='client')  path = 'api/clients.php?id='+id;
@@ -1163,7 +1168,7 @@ function renderProjets(){
     }).join('');
     var editBtn = '<button class="btn btn-sm" onclick="event.stopPropagation();openEditProjet(\''+p.id+'\')" title="Modifier" style="color:var(--accent);margin-right:3px">✎</button>';
     return '<tr onclick="openProjetDetail(\''+p.id+'\')" style="cursor:pointer">'+cells+
-      '<td onclick="event.stopPropagation()">'+editBtn+'<button class="btn btn-sm" onclick="event.stopPropagation();deleteRow(\'projet\',\''+p.id+'\')" style="color:#e07070">✕</button></td><td></td></tr>';
+      '<td onclick="event.stopPropagation()">'+editBtn+(canDelete() ? '<button class="btn btn-sm" onclick="event.stopPropagation();deleteRow(\'projet\',\''+p.id+'\')" style="color:#e07070">✕</button>' : '')+'</td><td></td></tr>';
   }).join('');
   if(document.getElementById('page-projets')&&document.getElementById('page-projets').classList.contains('active')){
     if(typeof refreshGlobalMap==='function') setTimeout(refreshGlobalMap,100);

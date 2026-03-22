@@ -201,7 +201,8 @@ function update($id, array $user) {
 
 function remove($id, array $user) {
     if (!$id) jsonError('ID requis');
-    if (($user['role'] ?? '') !== 'admin') jsonError('Admin requis', 403);
+    $role = $user['role'] ?? '';
+    if ($role !== 'admin' && $role !== 'Architecte gérant') jsonError('Seul un Architecte gérant peut supprimer', 403);
     getDB()->prepare('DELETE FROM CA_clients WHERE id = ?')->execute([$id]);
     getDB()->prepare('DELETE FROM CA_clients_contacts_aux WHERE client_id = ?')->execute([$id]);
     jsonOk(['deleted' => $id]);
