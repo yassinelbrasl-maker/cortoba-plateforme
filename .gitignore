@@ -1,0 +1,4 @@
+error_log
+.claude/
+api/test_nas.php
+config/db.php
