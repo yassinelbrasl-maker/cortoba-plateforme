@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="plateforme.css">
+  <link rel="stylesheet" href="ergonomie.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <style>
     /* Garantir que l'écran de login est visible immédiatement, avant que le CSS externe charge */
@@ -317,12 +318,18 @@
         <div class="table-wrap">
           <div class="table-header">
             <span class="table-title">Devis 2026</span>
-            <div class="table-search">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" placeholder="Rechercher…" />
+            <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap">
+              <div class="table-search">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Rechercher…" />
+              </div>
+              <button class="btn btn-sm" onclick="exportTableCSV(document.getElementById('devis-table'),'devis-2026')" title="Exporter en CSV">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                CSV
+              </button>
             </div>
           </div>
-          <table>
+          <table id="devis-table">
             <thead><tr>
               <th>Réf.</th><th>Client</th><th>Objet</th><th>Montant</th><th>Date</th><th>Statut</th><th></th>
             </tr></thead>
@@ -334,7 +341,7 @@
                 <td class="inline-val">12 500 TND</td>
                 <td>08 Mar 2026</td>
                 <td><span class="badge badge-green">Accepté</span></td>
-                <td><button class="btn btn-sm">Voir</button></td>
+                <td style="display:flex;gap:0.4rem"><button class="btn btn-sm">Voir</button><button class="ergo-dup-btn" onclick="duplicateDevis('DV-2026-042')" title="Dupliquer">⧉</button></td>
               </tr>
               <tr>
                 <td class="inline-val">DV-2026-039</td>
@@ -343,7 +350,7 @@
                 <td class="inline-val">38 000 TND</td>
                 <td>02 Mar 2026</td>
                 <td><span class="badge badge-orange">En attente</span></td>
-                <td><button class="btn btn-sm">Voir</button></td>
+                <td style="display:flex;gap:0.4rem"><button class="btn btn-sm">Voir</button><button class="ergo-dup-btn" onclick="duplicateDevis('DV-2026-039')" title="Dupliquer">⧉</button></td>
               </tr>
               <tr>
                 <td class="inline-val">DV-2026-036</td>
@@ -352,7 +359,7 @@
                 <td class="inline-val">6 200 TND</td>
                 <td>22 Fév 2026</td>
                 <td><span class="badge badge-orange">En attente</span></td>
-                <td><button class="btn btn-sm">Voir</button></td>
+                <td style="display:flex;gap:0.4rem"><button class="btn btn-sm">Voir</button><button class="ergo-dup-btn" onclick="duplicateDevis('DV-2026-036')" title="Dupliquer">⧉</button></td>
               </tr>
               <tr>
                 <td class="inline-val">DV-2026-031</td>
@@ -361,7 +368,7 @@
                 <td class="inline-val">95 000 TND</td>
                 <td>10 Fév 2026</td>
                 <td><span class="badge badge-blue">En négociation</span></td>
-                <td><button class="btn btn-sm">Voir</button></td>
+                <td style="display:flex;gap:0.4rem"><button class="btn btn-sm">Voir</button><button class="ergo-dup-btn" onclick="duplicateDevis('DV-2026-031')" title="Dupliquer">⧉</button></td>
               </tr>
               <tr>
                 <td class="inline-val">DV-2026-028</td>
@@ -370,7 +377,7 @@
                 <td class="inline-val">9 800 TND</td>
                 <td>01 Fév 2026</td>
                 <td><span class="badge badge-red">Refusé</span></td>
-                <td><button class="btn btn-sm">Voir</button></td>
+                <td style="display:flex;gap:0.4rem"><button class="btn btn-sm">Voir</button><button class="ergo-dup-btn" onclick="duplicateDevis('DV-2026-028')" title="Dupliquer">⧉</button></td>
               </tr>
               <tr>
                 <td class="inline-val">DV-2026-021</td>
@@ -379,10 +386,18 @@
                 <td class="inline-val">22 000 TND</td>
                 <td>15 Jan 2026</td>
                 <td><span class="badge badge-green">Accepté</span></td>
-                <td><button class="btn btn-sm">Voir</button></td>
+                <td style="display:flex;gap:0.4rem"><button class="btn btn-sm">Voir</button><button class="ergo-dup-btn" onclick="duplicateDevis('DV-2026-021')" title="Dupliquer">⧉</button></td>
               </tr>
             </tbody>
           </table>
+          <!-- Barre d'actions groupées devis -->
+          <div id="devis-bulk-bar" class="ergo-bulk-bar">
+            <span class="ergo-bulk-count">0 sélectionné</span>
+            <div class="ergo-bulk-actions">
+              <button class="btn btn-sm" onclick="exportTableCSV(document.getElementById('devis-table'),'devis-selection')">Exporter CSV</button>
+              <button class="btn btn-sm" style="color:var(--red)" onclick="alert('Archivage groupé — fonctionnalité à connecter à l\'API')">Archiver</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -490,10 +505,14 @@
         <div class="table-wrap">
           <div class="table-header">
             <span class="table-title">Factures 2026</span>
+            <button class="btn btn-sm" onclick="exportTableCSV(document.getElementById('factures-table'),'factures-2026')" title="Exporter en CSV">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              CSV
+            </button>
           </div>
-          <table>
+          <table id="factures-table">
             <thead><tr>
-              <th>N° Facture</th><th>Client</th><th>Projet</th><th>Montant HT</th><th>Total TTC</th><th>Échéance</th><th>Statut</th><th></th>
+              <th>N° Facture</th><th>Client</th><th>Projet</th><th>Montant HT</th><th>TVA</th><th>Total TTC</th><th>Échéance</th><th>Statut</th><th></th>
             </tr></thead>
             <tbody id="factures-tbody">
               <tr>
@@ -505,6 +524,7 @@
                 <td class="inline-val">6 420 TND</td>
                 <td>31 Mar 2026</td>
                 <td><span class="badge badge-orange">Envoyée</span></td>
+                <td><button class="btn btn-sm">Voir</button></td>
               </tr>
               <tr>
                 <td class="inline-val">F-2026-020</td>
@@ -515,6 +535,7 @@
                 <td class="inline-val">5 992 TND</td>
                 <td>06 Mar 2026</td>
                 <td><span class="badge badge-red">Impayée</span></td>
+                <td><button class="btn btn-sm">Voir</button></td>
               </tr>
               <tr>
                 <td class="inline-val">F-2026-019</td>
@@ -525,6 +546,7 @@
                 <td class="inline-val">3 745 TND</td>
                 <td>28 Fév 2026</td>
                 <td><span class="badge badge-red">Impayée</span></td>
+                <td><button class="btn btn-sm">Voir</button></td>
               </tr>
               <tr>
                 <td class="inline-val">F-2026-018</td>
@@ -535,6 +557,7 @@
                 <td class="inline-val">6 420 TND</td>
                 <td>20 Fév 2026</td>
                 <td><span class="badge badge-green">Payée</span></td>
+                <td><button class="btn btn-sm">Voir</button></td>
               </tr>
               <tr>
                 <td class="inline-val">F-2026-015</td>
@@ -545,9 +568,18 @@
                 <td class="inline-val">12 840 TND</td>
                 <td>15 Jan 2026</td>
                 <td><span class="badge badge-green">Payée</span></td>
+                <td><button class="btn btn-sm">Voir</button></td>
               </tr>
             </tbody>
           </table>
+          <!-- Barre d'actions groupées factures -->
+          <div id="factures-bulk-bar" class="ergo-bulk-bar">
+            <span class="ergo-bulk-count">0 sélectionné</span>
+            <div class="ergo-bulk-actions">
+              <button class="btn btn-sm" onclick="exportTableCSV(document.getElementById('factures-table'),'factures-selection')">Exporter CSV</button>
+              <button class="btn btn-sm" onclick="alert('Relance groupée — fonctionnalité à connecter à l\'API')" style="color:var(--orange)">Relancer</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1999,6 +2031,27 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="plateforme.js?v=11"></script>
+<script src="ergonomie.js?v=1"></script>
+<script>
+// Initialisation des fonctionnalités ergonomiques après chargement complet
+document.addEventListener('DOMContentLoaded', function() {
+  // Activer tri par colonnes sur les tables statiques (dynamic tables seront auto-detected)
+  setTimeout(function() {
+    // Bulk select devis + factures (init après que les tables soient visibles)
+    var checkTables = setInterval(function() {
+      var devisTable  = document.getElementById('devis-table');
+      var facTable    = document.getElementById('factures-table');
+      if (devisTable && facTable) {
+        clearInterval(checkTables);
+        if (window.initBulkSelect) {
+          window.initBulkSelect('#devis-table',    'devis-bulk-bar');
+          window.initBulkSelect('#factures-table', 'factures-bulk-bar');
+        }
+      }
+    }, 600);
+  }, 800);
+});
+</script>
 
 <!-- ══════════════════════════════════════
      MODAL MEMBRE — Nouveau / Modifier
