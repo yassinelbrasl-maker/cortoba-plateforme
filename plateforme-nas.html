@@ -412,7 +412,7 @@
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
               Serveur NAS
             </button>
-            <button class="btn btn-primary" onclick="openModal('modal-projet')">
+            <button class="btn btn-primary" onclick="openConfigurateur()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Nouveau projet
             </button>
@@ -1610,6 +1610,46 @@
           <div class="form-field full">
             <label class="form-label">Description</label>
             <textarea id="pj-description" class="form-input" rows="2" placeholder="Description courte du projet…" style="resize:vertical"></textarea>
+          </div>
+        </div>
+        <!-- Données techniques (configurateur) -->
+        <div style="margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem">
+          <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:0.8rem">Données techniques</div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label">Surface SHON (m²)</label>
+              <input id="pj-shon" class="form-input" type="number" step="0.01" placeholder="0" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Surface SHOB (m²)</label>
+              <input id="pj-shob" class="form-input" type="number" step="0.01" placeholder="0" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Surface terrain (m²)</label>
+              <input id="pj-terrain" class="form-input" type="number" step="0.01" placeholder="0" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Standing</label>
+              <select id="pj-standing" class="form-select" onchange="pjAutoCalcCoutM2()">
+                <option value="">— Sélectionner —</option>
+                <option>Économique</option><option>Standard</option><option>Moyen-Haut</option><option>Haut standing</option><option>Luxe</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Zone</label>
+              <select id="pj-zone" class="form-select" onchange="pjAutoCalcCoutM2()">
+                <option value="">— Sélectionner —</option>
+                <option>Urbaine</option><option>Périurbaine</option><option>Rurale</option><option>Agricole</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Coût construction (TND)</label>
+              <input id="pj-cout-construction" class="form-input" type="number" step="0.01" placeholder="0" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">Coût / m² (TND)</label>
+              <input id="pj-cout-m2" class="form-input" type="number" step="0.01" placeholder="0" />
+            </div>
           </div>
         </div>
       </div>

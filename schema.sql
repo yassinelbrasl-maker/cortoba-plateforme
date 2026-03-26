@@ -82,6 +82,13 @@ CREATE TABLE IF NOT EXISTS `CA_projets` (
   `lat` decimal(10,7) DEFAULT NULL,
   `lng` decimal(10,7) DEFAULT NULL,
   `nas_path` varchar(500) DEFAULT NULL,
+  `surface_shon` decimal(12,2) DEFAULT NULL,
+  `surface_shob` decimal(12,2) DEFAULT NULL,
+  `surface_terrain` decimal(12,2) DEFAULT NULL,
+  `standing` varchar(40) DEFAULT NULL,
+  `zone` varchar(40) DEFAULT NULL,
+  `cout_construction` decimal(14,2) DEFAULT NULL,
+  `cout_m2` decimal(10,2) DEFAULT NULL,
   `cree_par` varchar(120) DEFAULT NULL,
   `modifie_par` varchar(120) DEFAULT NULL,
   `cree_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -176,3 +183,15 @@ CREATE TABLE IF NOT EXISTS `CA_parametres` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ════════════════════════════════════════════════════════════
+-- MIGRATION : ajouter les colonnes configurateur à CA_projets
+-- Exécuter si la table existe déjà sans ces colonnes
+-- ════════════════════════════════════════════════════════════
+-- ALTER TABLE `CA_projets` ADD COLUMN IF NOT EXISTS `surface_shon` decimal(12,2) DEFAULT NULL;
+-- ALTER TABLE `CA_projets` ADD COLUMN IF NOT EXISTS `surface_shob` decimal(12,2) DEFAULT NULL;
+-- ALTER TABLE `CA_projets` ADD COLUMN IF NOT EXISTS `surface_terrain` decimal(12,2) DEFAULT NULL;
+-- ALTER TABLE `CA_projets` ADD COLUMN IF NOT EXISTS `standing` varchar(40) DEFAULT NULL;
+-- ALTER TABLE `CA_projets` ADD COLUMN IF NOT EXISTS `zone` varchar(40) DEFAULT NULL;
+-- ALTER TABLE `CA_projets` ADD COLUMN IF NOT EXISTS `cout_construction` decimal(14,2) DEFAULT NULL;
+-- ALTER TABLE `CA_projets` ADD COLUMN IF NOT EXISTS `cout_m2` decimal(10,2) DEFAULT NULL;

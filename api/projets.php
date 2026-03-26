@@ -71,8 +71,10 @@ function create(array $user) {
         try {
             $db->prepare('
                 INSERT INTO CA_projets (id, code, nom, client, client_code, annee, phase, statut, type_bat,
-                    delai, honoraires, budget, surface, description, adresse, lat, lng, nas_path, cree_par)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    delai, honoraires, budget, surface, description, adresse, lat, lng, nas_path,
+                    surface_shon, surface_shob, surface_terrain, standing, zone, cout_construction, cout_m2,
+                    cree_par)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ')->execute([
                 $id,
                 $code,
@@ -92,6 +94,13 @@ function create(array $user) {
                 !empty($body['lat']) ? floatval($body['lat']) : null,
                 !empty($body['lng']) ? floatval($body['lng']) : null,
                 $body['nasPath']     ?? null,
+                !empty($body['surface_shon']) ? floatval($body['surface_shon']) : null,
+                !empty($body['surface_shob']) ? floatval($body['surface_shob']) : null,
+                !empty($body['surface_terrain']) ? floatval($body['surface_terrain']) : null,
+                $body['standing']    ?? null,
+                $body['zone']        ?? null,
+                !empty($body['cout_construction']) ? floatval($body['cout_construction']) : null,
+                !empty($body['cout_m2']) ? floatval($body['cout_m2']) : null,
                 $user['name'],
             ]);
             break; // INSERT réussi
@@ -163,7 +172,10 @@ function update($id, array $user) {
         UPDATE CA_projets SET
             nom=?, client=?, client_code=?, annee=?, phase=?, statut=?, type_bat=?,
             delai=?, honoraires=?, budget=?, surface=?, description=?, adresse=?,
-            lat=?, lng=?, modifie_par=?
+            lat=?, lng=?,
+            surface_shon=?, surface_shob=?, surface_terrain=?, standing=?, zone=?,
+            cout_construction=?, cout_m2=?,
+            modifie_par=?
         WHERE id=?
     ')->execute([
         trim($body['nom']        ?? ''),
@@ -181,6 +193,13 @@ function update($id, array $user) {
         $body['adresse']         ?? null,
         !empty($body['lat']) ? floatval($body['lat']) : null,
         !empty($body['lng']) ? floatval($body['lng']) : null,
+        !empty($body['surface_shon']) ? floatval($body['surface_shon']) : null,
+        !empty($body['surface_shob']) ? floatval($body['surface_shob']) : null,
+        !empty($body['surface_terrain']) ? floatval($body['surface_terrain']) : null,
+        $body['standing']        ?? null,
+        $body['zone']            ?? null,
+        !empty($body['cout_construction']) ? floatval($body['cout_construction']) : null,
+        !empty($body['cout_m2']) ? floatval($body['cout_m2']) : null,
         $user['name'],
         $id,
     ]);

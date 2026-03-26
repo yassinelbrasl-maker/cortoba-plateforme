@@ -1462,6 +1462,31 @@ function resetProjetForm(){
   setTimeout(initExtensibleSelects, 50);
 }
 
+// ── Ouvrir le configurateur dans un nouvel onglet ──
+function openConfigurateur(){
+  var token=sessionStorage.getItem('cortoba_token');
+  if(token){
+    localStorage.setItem('cortoba_xfer_token',JSON.stringify({token:token,ts:Date.now()}));
+  }
+  window.open('configurateur.html','_blank');
+}
+
+// ── Auto-calc coût/m² dans le modal d'édition projet ──
+var _PJ_BENCH={'Économique':[700,1100],'Standard':[1100,1700],'Moyen-Haut':[1700,2600],'Haut standing':[2600,4200],'Luxe':[4200,7500]};
+var _PJ_ZONE_COEFF={'Urbaine':1.00,'Périurbaine':0.92,'Rurale':0.82,'Agricole':0.75};
+function pjAutoCalcCoutM2(){
+  var std=document.getElementById('pj-standing'); var z=document.getElementById('pj-zone');
+  var shon=document.getElementById('pj-shon'); var cout=document.getElementById('pj-cout-construction'); var m2=document.getElementById('pj-cout-m2');
+  if(!std||!z||!m2) return;
+  var b=_PJ_BENCH[std.value]; var coeff=_PJ_ZONE_COEFF[z.value];
+  if(b&&coeff!==undefined){
+    var mid=((b[0]+b[1])/2)*coeff;
+    m2.value=Math.round(mid);
+    var s=parseFloat((shon||{}).value)||0;
+    if(s>0&&cout) cout.value=Math.round(mid*s);
+  }
+}
+
 // A5 — openEditProjet: utilise openModal interne (sans reset) puis rempli les champs
 function openEditProjet(id){
   var p = getProjets().find(function(x){ return x.id===id; }); if(!p) return;
@@ -1492,6 +1517,15 @@ function openEditProjet(id){
     document.getElementById('pj-lng').value = p.lng;
     showPjCoords(p.lat, p.lng);
   }
+
+  // Données techniques (configurateur)
+  var shonEl=document.getElementById('pj-shon'); if(shonEl) shonEl.value=p.surface_shon||'';
+  var shobEl=document.getElementById('pj-shob'); if(shobEl) shobEl.value=p.surface_shob||'';
+  var terrEl=document.getElementById('pj-terrain'); if(terrEl) terrEl.value=p.surface_terrain||'';
+  var stdEl=document.getElementById('pj-standing'); if(stdEl) stdEl.value=p.standing||'';
+  var zoneEl=document.getElementById('pj-zone'); if(zoneEl) zoneEl.value=p.zone||'';
+  var coutEl=document.getElementById('pj-cout-construction'); if(coutEl) coutEl.value=p.cout_construction||'';
+  var m2El=document.getElementById('pj-cout-m2'); if(m2El) m2El.value=p.cout_m2||'';
 
   populateClientSelect();
   var sel    = document.getElementById('pj-client');
@@ -1610,6 +1644,13 @@ function saveProjet(){
     description:description||null, adresse:adresse||null,
     lat:lat, lng:lng, nasPath:nasPath,
     nas_path:nasPath,                  // compatibilité snake_case
+    surface_shon: parseFloat((document.getElementById('pj-shon')||{}).value)||null,
+    surface_shob: parseFloat((document.getElementById('pj-shob')||{}).value)||null,
+    surface_terrain: parseFloat((document.getElementById('pj-terrain')||{}).value)||null,
+    standing: (document.getElementById('pj-standing')||{}).value||null,
+    zone: (document.getElementById('pj-zone')||{}).value||null,
+    cout_construction: parseFloat((document.getElementById('pj-cout-construction')||{}).value)||null,
+    cout_m2: parseFloat((document.getElementById('pj-cout-m2')||{}).value)||null,
     missions:getSelectedMissions(),
     intervenants:getIntervenants()
   };
